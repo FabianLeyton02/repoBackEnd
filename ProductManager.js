@@ -1,18 +1,16 @@
-class Product {
-  constructor(id, title, description, price, thumbnail, code, stock) {
-    this.id = id;
-    this.title = title;
-    this.description = description;
-    this.price = Number(price);
-    this.thumbnail = thumbnail;
-    this.code = code;
-    this.stock = Number(stock);
-  }
-}
-
 class ProductManager {
   constructor() {
     this.products = [];
+  }
+
+  #getMaxId() {
+    let maxId = 0;
+    this.products.forEach((element) => {
+      if (element.id > maxId) {
+        maxId = element.id;
+      }
+    });
+    return maxId + 1;
   }
 
   addProduct(title, description, price, thumbnail, code, stock) {
@@ -68,10 +66,17 @@ class ProductManager {
       if (productFound) {
         console.error("ERROR: product already exists");
       } else {
-        let id = this.products.length + 1;
-        this.products.push(
-          new Product(id, title, description, price, thumbnail, code, stock)
-        );
+        const product = {
+          id: this.#getMaxId(),
+          title,
+          description,
+          price,
+          thumbnail,
+          code,
+          stock,
+        };
+
+        this.products.push(product);
       }
     }
   }
@@ -112,7 +117,7 @@ productManager.addProduct(
   "Este es un producto de prueba",
   200,
   "Sin imagen",
-  "abc123",
+  "abc124",
   25
 );
 
