@@ -117,7 +117,7 @@ productManager.addProduct(
   "Este es un producto de prueba",
   200,
   "Sin imagen",
-  "abc124",
+  "abc123",
   25
 );
 
