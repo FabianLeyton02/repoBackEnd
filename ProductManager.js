@@ -1,11 +1,14 @@
+const fs = require("fs");
+
 class ProductManager {
-  constructor() {
-    this.products = [];
+  constructor(path) {
+    this.path = path;
   }
 
   #getMaxId() {
     let maxId = 0;
-    this.products.forEach((element) => {
+    let products = this.#getProductsFromFile();
+    products.forEach((element) => {
       if (element.id > maxId) {
         maxId = element.id;
       }
@@ -13,7 +16,7 @@ class ProductManager {
     return maxId + 1;
   }
 
-  addProduct(title, description, price, thumbnail, code, stock) {
+  #validateInfo(title, description, price, thumbnail, code, stock) {
     let validado = true;
 
     if (!title) {
@@ -46,7 +49,7 @@ class ProductManager {
       console.error("ERROR: code is undefined");
     }
 
-    if (!stock) {
+    if (stock === undefined) {
       validado = false;
       console.error("ERROR: stock is undefined");
     } else {
@@ -55,9 +58,22 @@ class ProductManager {
         console.error("ERROR: stock is not a number");
       }
     }
-    let productFound = false;
+    return validado;
+  }
+
+  addProduct(title, description, price, thumbnail, code, stock) {
+    let products = this.#getProductsFromFile();
+    let validado = this.#validateInfo(
+      title,
+      description,
+      price,
+      thumbnail,
+      code,
+      stock
+    );
     if (validado) {
-      this.products.forEach((element) => {
+      let productFound = false;
+      products.forEach((element) => {
         if (element.code === code) {
           productFound = true;
         }
@@ -76,17 +92,28 @@ class ProductManager {
           stock,
         };
 
-        this.products.push(product);
+        products.push(product);
+        this.#saveData(products);
       }
     }
   }
 
+  #getProductsFromFile() {
+    let productsFromFile = [];
+    if (fs.existsSync(this.path)) {
+      productsFromFile = JSON.parse(fs.readFileSync(this.path));
+    }
+    return productsFromFile;
+  }
+
   getProducts() {
-    console.log(this.products);
+    let products = this.#getProductsFromFile();
+    console.log(products);
   }
   getProductById(id) {
     let product = undefined;
-    this.products.forEach((element) => {
+    let products = this.#getProductsFromFile();
+    products.forEach((element) => {
       if (element.id === id) {
         product = element;
       }
@@ -94,14 +121,68 @@ class ProductManager {
     if (product === undefined) {
       console.error("ERROR: not found");
     } else {
-      console.log(product);
+      return product;
     }
+  }
+
+  #saveData(products) {
+    let linea = JSON.stringify(products, null, "\t");
+    if (fs.existsSync(this.path)) {
+      fs.unlinkSync(this.path);
+    }
+    fs.writeFileSync(this.path, linea, "utf-8");
+  }
+
+  deleteProduct(id) {
+    let products = this.#getProductsFromFile();
+    let index = 0;
+    let productIndex = undefined;
+    products.forEach((element) => {
+      if (element.id === id) {
+        productIndex = index;
+      }
+      index++;
+    });
+
+    if (productIndex === undefined) {
+      console.error("ERROR: product not found");
+    } else {
+      products.splice(productIndex, 1);
+      this.#saveData(products);
+    }
+  }
+  updateProduct(id, title, description, price, thumbnail, code, stock) {
+    let products = this.#getProductsFromFile();
+    products.forEach((element) => {
+      if (element.id === id) {
+        title ? (element.title = title) : element.title;
+        description ? (element.description = description) : element.description;
+        thumbnail ? (element.thumbnail = thumbnail) : element.thumbnail;
+
+        if (price && typeof price === "number") {
+          element.price = price;
+        }
+
+        if (typeof stock === "number") {
+          element.stock = stock;
+        }
+
+        if (code) {
+          let product = this.findProduct(code);
+          if (product.code === code && product.id === id) {
+            element.code = code;
+          }
+        }
+      }
+    });
+    this.#saveData(products);
   }
 }
 
-let productManager = new ProductManager();
+let productManager = new ProductManager("./data/archivo.txt");
 
 productManager.getProducts();
+
 productManager.addProduct(
   "producto prueba",
   "Este es un producto de prueba",
@@ -111,15 +192,28 @@ productManager.addProduct(
   25
 );
 
-productManager.getProducts();
 productManager.addProduct(
-  "producto prueba",
-  "Este es un producto de prueba",
-  200,
+  "OTRO PRODUCTO PRUEBA",
+  "Este es un producto de prueba 2",
+  400,
   "Sin imagen",
-  "abc123",
+  "abc125",
   25
 );
 
+productManager.getProducts();
 productManager.getProductById(1);
-productManager.getProductById(2);
+productManager.getProductById(3);
+
+productManager.updateProduct(
+  2,
+  "Nuevo titulo",
+  "otra descripcion",
+  0,
+  "con imagen",
+  "",
+  0
+);
+
+productManager.deleteProduct(1);
+productManager.deleteProduct(5);
