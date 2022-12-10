@@ -1,6 +1,17 @@
-const fs = require("fs");
+import fs from "fs";
 
-class ProductManager {
+export class Product {
+  constructor(title, description, price, thumbnail, code, stock) {
+    this.title = title;
+    this.description = description;
+    this.price = price;
+    this.thumbnail = thumbnail;
+    this.code = code;
+    this.stock = stock;
+  }
+}
+
+export class ProductManager {
   constructor(path) {
     this.path = path;
   }
@@ -16,44 +27,44 @@ class ProductManager {
     return maxId + 1;
   }
 
-  #validateInfo(title, description, price, thumbnail, code, stock) {
+  #validateInfo(product) {
     let validado = true;
 
-    if (!title) {
+    if (!product.title) {
       validado = false;
       console.error("ERROR: title is undefined");
     }
 
-    if (!description) {
+    if (!product.description) {
       validado = false;
       console.error("ERROR: description is undefined");
     }
 
-    if (!price) {
+    if (!product.price) {
       validado = false;
       console.error("ERROR: price is undefined");
     } else {
-      if (typeof price != "number") {
+      if (typeof product.price != "number") {
         console.error("ERROR: price is not a number");
         validado = false;
       }
     }
 
-    if (!thumbnail) {
+    if (!product.thumbnail) {
       validado = false;
       console.error("ERROR: thumbnail is undefined");
     }
 
-    if (!code) {
+    if (!product.code) {
       validado = false;
       console.error("ERROR: code is undefined");
     }
 
-    if (stock === undefined) {
+    if (product.stock === undefined) {
       validado = false;
       console.error("ERROR: stock is undefined");
     } else {
-      if (typeof stock != "number") {
+      if (typeof product.stock != "number") {
         validado = false;
         console.error("ERROR: stock is not a number");
       }
@@ -61,20 +72,14 @@ class ProductManager {
     return validado;
   }
 
-  addProduct(title, description, price, thumbnail, code, stock) {
+  addProduct(product) {
     let products = this.#getProductsFromFile();
-    let validado = this.#validateInfo(
-      title,
-      description,
-      price,
-      thumbnail,
-      code,
-      stock
-    );
+    let validado = this.#validateInfo(product);
+
     if (validado) {
       let productFound = false;
       products.forEach((element) => {
-        if (element.code === code) {
+        if (element.code === product.code) {
           productFound = true;
         }
       });
@@ -82,17 +87,17 @@ class ProductManager {
       if (productFound) {
         console.error("ERROR: product already exists");
       } else {
-        const product = {
+        const productItem = {
           id: this.#getMaxId(),
-          title,
-          description,
-          price,
-          thumbnail,
-          code,
-          stock,
+          title: product.title,
+          description: product.description,
+          price: product.price,
+          thumbnail: product.thumbnail,
+          code: product.code,
+          stock: product.stock,
         };
 
-        products.push(product);
+        products.push(productItem);
         this.#saveData(products);
       }
     }
@@ -108,13 +113,20 @@ class ProductManager {
 
   getProducts() {
     let products = this.#getProductsFromFile();
-    console.log(products);
+    return products;
   }
+
+  getProductsAmount(quantity) {
+    let products = this.#getProductsFromFile();
+    let final = products.splice(0, quantity);
+    return final;
+  }
+
   getProductById(id) {
     let product = undefined;
     let products = this.#getProductsFromFile();
     products.forEach((element) => {
-      if (element.id === id) {
+      if (element.id === Number(id)) {
         product = element;
       }
     });
@@ -178,42 +190,3 @@ class ProductManager {
     this.#saveData(products);
   }
 }
-
-let productManager = new ProductManager("./data/archivo.txt");
-
-productManager.getProducts();
-
-productManager.addProduct(
-  "producto prueba",
-  "Este es un producto de prueba",
-  200,
-  "Sin imagen",
-  "abc123",
-  25
-);
-
-productManager.addProduct(
-  "OTRO PRODUCTO PRUEBA",
-  "Este es un producto de prueba 2",
-  400,
-  "Sin imagen",
-  "abc125",
-  25
-);
-
-productManager.getProducts();
-productManager.getProductById(1);
-productManager.getProductById(3);
-
-productManager.updateProduct(
-  2,
-  "Nuevo titulo",
-  "otra descripcion",
-  0,
-  "con imagen",
-  "",
-  0
-);
-
-productManager.deleteProduct(1);
-productManager.deleteProduct(5);
