@@ -1,13 +1,15 @@
 import fs from "fs";
 
 export class Product {
-  constructor(title, description, price, thumbnail, code, stock) {
+  constructor(title, description, price, thumbnail, code, stock, category) {
     this.title = title;
     this.description = description;
     this.price = price;
     this.thumbnail = thumbnail;
     this.code = code;
     this.stock = stock;
+    this.status = true;
+    this.category = category;
   }
 }
 
@@ -50,9 +52,9 @@ export class ProductManager {
       }
     }
 
-    if (!product.thumbnail) {
+    if (!product.category) {
       validado = false;
-      console.error("ERROR: thumbnail is undefined");
+      console.error("ERROR: category is undefined");
     }
 
     if (!product.code) {
@@ -95,6 +97,8 @@ export class ProductManager {
           thumbnail: product.thumbnail,
           code: product.code,
           stock: product.stock,
+          category: product.category,
+          status: product.status,
         };
 
         products.push(productItem);
@@ -163,13 +167,35 @@ export class ProductManager {
       this.#saveData(products);
     }
   }
-  updateProduct(id, title, description, price, thumbnail, code, stock) {
+
+  #findProduct(code) {
+    let products = this.#getProductsFromFile();
+    let product = undefined;
+    products.forEach((element) => {
+      if (element.code === code) {
+        product = element;
+      }
+      return product;
+    });
+  }
+
+  updateProduct(
+    id,
+    title,
+    description,
+    price,
+    thumbnail,
+    code,
+    stock,
+    category
+  ) {
     let products = this.#getProductsFromFile();
     products.forEach((element) => {
       if (element.id === id) {
         title ? (element.title = title) : element.title;
         description ? (element.description = description) : element.description;
         thumbnail ? (element.thumbnail = thumbnail) : element.thumbnail;
+        category ? (element.category = category) : element.category;
 
         if (price && typeof price === "number") {
           element.price = price;
@@ -178,10 +204,9 @@ export class ProductManager {
         if (typeof stock === "number") {
           element.stock = stock;
         }
-
         if (code) {
-          let product = this.findProduct(code);
-          if (product.code === code && product.id === id) {
+          let otherProduct = this.#findProduct(code);
+          if (!otherProduct) {
             element.code = code;
           }
         }
