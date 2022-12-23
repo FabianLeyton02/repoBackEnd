@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { Product, ProductManager } from "../../src/ProductManager.js";
+import { Product, ProductManager } from "../public/js/ProductManager.js";
 
 let productManager = new ProductManager("../../data");
 const router = Router();
@@ -58,6 +58,10 @@ router.post("/", (req, res) => {
         new Product(title, description, price, thumbnail, code, stock, category)
       )
     );
+});
+
+router.get("/realtimeproducts", (req, res) => {
+  res.render("realTimeProducts");
 });
 
 export default router;
