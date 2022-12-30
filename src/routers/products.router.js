@@ -1,17 +1,17 @@
 import { Router } from "express";
-import { Product, ProductManager } from "../public/js/ProductManager.js";
+import { Product, ProductManager } from "../../public/js/ProductManager.js";
 
 let productManager = new ProductManager("../../data");
 const router = Router();
 
-router.get("/", (req, res) => {
-  const { limit } = req.query;
-  if (limit) {
-    res.json(productManager.getProductsAmount(limit));
-  } else {
-    res.json(productManager.getProducts());
-  }
-});
+// router.get("/", (req, res) => {
+//   const { limit } = req.query;
+//   if (limit) {
+//     res.json(productManager.getProductsAmount(limit));
+//   } else {
+//     res.json(productManager.getProducts());
+//   }
+// });
 
 router.get("/:pid", (req, res) => {
   const { pid } = req.params;
@@ -60,7 +60,7 @@ router.post("/", (req, res) => {
     );
 });
 
-router.get("/realtimeproducts", (req, res) => {
+router.get("/", (req, res) => {
   res.render("realTimeProducts");
 });
 
