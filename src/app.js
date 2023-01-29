@@ -17,8 +17,8 @@ app.engine("handlebars", engine());
 app.set("view engine", "handlebars");
 app.set("views", "/views");
 
-app.use("/api/carts", cartsRouter);
-app.use("/realtimeproducts", productsRouter);
+app.use("/carts", cartsRouter);
+app.use("/products", productsRouter);
 app.use("/", viewsRouter);
 
 const PORT = process.env.PORT || 3000;

@@ -9,9 +9,9 @@ export async function getProduct(code) {
   }
 }
 
-export async function getProducts() {
+export async function getProducts(page, limit) {
   try {
-    const products = await ProductModel.find({ deletedAt: { $exists: false } });
+    const products = await ProductModel.paginate({}, { limit, page });
     return products;
   } catch (error) {
     throw new Error(error.message);

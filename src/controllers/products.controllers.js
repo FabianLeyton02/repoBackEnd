@@ -19,7 +19,9 @@ export async function getProduct(req, res) {
 
 export async function getProducts(req, res) {
   try {
-    const response = await ProductService.getProducts();
+    const { page } = req.query || 10;
+    const { limit } = req.query || 1;
+    const response = await ProductService.getProducts(page, limit);
     res.json({
       Products: response,
       status: STATUS.SUCCESS,

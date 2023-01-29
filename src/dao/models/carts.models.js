@@ -1,12 +1,17 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
+
+let itemSchema = new mongoose.Schema(
+  {
+    product: { type: Schema.Types.ObjectId, ref: "Products" },
+    quantity: { type: Number, default: 1 },
+  },
+  { timestamps: true }
+);
 
 const schema = new mongoose.Schema(
   {
-    id: { type: Number, required: true, unique: true },
-    products: {
-      productCode: { type: String, required: true },
-      quantity: { type: Number, required: true },
-    },
+    items: [itemSchema],
+    subtotal: { type: Number, default: 0 },
   },
   { timestamps: true }
 );
