@@ -1,3 +1,4 @@
+import { io } from "socket.io-client";
 const socket = io();
 
 let title = document.getElementById("title");
@@ -10,10 +11,10 @@ let category = document.getElementById("category");
 
 let productList = document.getElementById("products");
 
-let name = document.getElementById("name");
+// let name = document.getElementById("name");
 let submit = document.getElementById("submit");
-let message = document.getElementById("message");
-let messages = document.getElementById("messages");
+// let message = document.getElementById("message");
+// let messages = document.getElementById("messages");
 
 let newProductList = [];
 

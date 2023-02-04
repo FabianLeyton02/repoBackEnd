@@ -39,7 +39,7 @@ export class CartManager {
     return maxId + 1;
   }
 
-  createCart(id) {
+  createCart() {
     this.carts.push(new Cart(this.#getMaxId()));
     console.log(this.carts);
   }
