@@ -1,7 +1,8 @@
 export function auth(req, res, next) {
   if (req.session.logged) {
+    req.session.touch();
     next();
   } else {
-    res.send("Ruta restringida");
+    res.status(400).send("Ruta restringida");
   }
 }

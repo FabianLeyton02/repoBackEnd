@@ -5,7 +5,6 @@ export async function login(req, res) {
     const { email, password } = req.body;
     const logged = await AuthService.login(email, password);
     if (logged) {
-      req.session.logged = true;
       res.send("Usuario registrado");
     } else {
       res.status(400).send("Usuario o clave no valida");
