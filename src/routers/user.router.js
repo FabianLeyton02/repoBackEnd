@@ -1,12 +1,18 @@
 import { Router } from "express";
-import * as UserController from "../controllers/user.controller.js";
+import userController from "../controllers/user.controller.js";
 import { auth } from "../middleware/auth.middleware.js";
 
-const router = new Router();
+class UserRouter {
+  constructor() {
+    this.router = Router();
+    this.router.post("/", userController.createUser);
+    this.router.get("/:email", userController.getUser);
+    this.router.put("/updateUser/:email", auth, userController.updateUser);
+  }
 
-router.post("/", UserController.createUser);
-router.get("/:email", auth, UserController.getUser);
-router.put("/updateUser/:email", auth, UserController.updateUser);
-router.put("/updatePassword/:email", auth, UserController.updatePassword);
+  getRouter() {
+    return this.router;
+  }
+}
 
-export default router;
+export default new UserRouter();

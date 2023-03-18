@@ -1,4 +1,4 @@
-import { Schema, model, SchemaType } from "mongoose";
+import { Schema, model } from "mongoose";
 
 const schema = new Schema(
   {
@@ -8,7 +8,7 @@ const schema = new Schema(
     age: { type: Number, required: true, min: 0 },
     password: { type: String, required: true, minLength: 6 },
     cartId: { type: Schema.Types.ObjectId, ref: "Carts" },
-    role: { type: String, required:true, default: "user" },
+    role: { type: String, required: true, default: "user" },
   },
   { timestamps: true }
 );

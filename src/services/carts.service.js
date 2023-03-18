@@ -1,4 +1,4 @@
-import { CartModel } from "../dao/models/carts.models.js";
+import { CartModel } from "../models/carts.models.js";
 
 export async function getCart(Id) {
   try {

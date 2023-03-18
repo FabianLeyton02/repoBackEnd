@@ -1,6 +1,6 @@
 import passport from "passport";
 import { Strategy } from "passport-local";
-import { UserModel } from "../dao/models/user.models.js";
+import { UserModel } from "../models/user.models.js";
 import * as UserService from "../services/user.service.js";
 import * as AuthService from "../services/auth.service.js";
 

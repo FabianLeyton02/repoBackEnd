@@ -1,4 +1,4 @@
-import { UserModel } from "../dao/models/user.models.js";
+import { UserModel } from "../models/user.models.js";
 import bcrypt from "bcrypt";
 
 export async function createUser(data) {

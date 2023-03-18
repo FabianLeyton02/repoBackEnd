@@ -1,12 +1,12 @@
 import express from "express";
 import cartsRouter from "./routers/carts.router.js";
-import productsRouter from "./routers/products.router.js";
+import ProductRouter from "./routers/products.router.js";
 import { engine } from "express-handlebars";
 import viewsRouter from "./routers/views.router.js";
 import cookie from "cookie-parser";
 import session from "express-session";
 import mongoStore from "connect-mongo";
-import userRouter from "./routers/user.router.js";
+import UserRouter from "./routers/user.router.js";
 import AuthRouter from "./routers/auth.router.js";
 import JWTRouter from "./routers/jwt.router.js";
 import PassportRouter from "./routers/passport.route.js";
@@ -24,8 +24,8 @@ export function setApp() {
   
   app.use("/", viewsRouter);
   app.use("/api/carts", cartsRouter);
-  app.use("/api/products", productsRouter);
-  app.use("/api/users", userRouter);
+  app.use("/api/products", ProductRouter.getRouter());
+  app.use("/api/users", UserRouter.getRouter());
   app.use("/api/auth", AuthRouter);
   app.use("/api/jwt", JWTRouter);
   app.use("/api/passport", PassportRouter);
