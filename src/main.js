@@ -12,6 +12,9 @@ import JWTRouter from "./routers/jwt.router.js";
 import PassportRouter from "./routers/passport.route.js";
 import passport from "./utils/passport.util.js";
 import cors from "cors";
+import errorHandler from "./middleware/errorHandler.js";
+import customError from "./utils/customError.js";
+import { validate as uuidValidate } from "uuid";
 
 export function setApp() {
   const app = express();
@@ -21,7 +24,8 @@ export function setApp() {
   app.use(express.static("/public"));
   app.use(passport.initialize());
   app.use(cors());
-  
+  app.use(errorHandler);
+
   app.use("/", viewsRouter);
   app.use("/api/carts", cartsRouter);
   app.use("/api/products", ProductRouter.getRouter());
@@ -30,9 +34,18 @@ export function setApp() {
   app.use("/api/jwt", JWTRouter);
   app.use("/api/passport", PassportRouter);
   app.use("/api/auth", AuthRouter);
+  app.use(compression());
 
   app.set("view engine", "handlebars");
   app.set("views", "/views");
+
+  app.get("/getUser/:uuid", (req, res) => {
+    const { uuid } = req.params;
+    const isValidate = uuidValidate(uuid);
+    if (!isValidate) {
+      customError.createError("getUserError", "UUid invalido", "El UUid es incorrecto", 3);
+    }
+  });
 
   app.engine("handlebars", engine());
 
