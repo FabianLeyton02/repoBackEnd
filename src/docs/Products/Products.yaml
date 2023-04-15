@@ -1,0 +1,36 @@
+paths:
+  /api/products/:
+    get:
+      summary: Obtener información de los productos
+      tags:
+        - Products
+      responses:
+        "200":
+          Carga Exitosa
+        "500":
+          Error en servidor
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: Id generado por mongo
+        title:
+          type: String
+        description: 
+          type: String
+          description: Descripción
+        price:  
+          type: Number
+          description: Precio
+        thumbnail:  
+          type: String
+          description: thumbnail
+        code:
+          type: String
+          description: Código
+        stock:
+          type: Number
+          description: Stock

@@ -1,0 +1,12 @@
+{
+  message: 'Mensaje warn',
+  level: 'warn',
+  label: 'Este es un label de error',
+  timestamp: '2023-04-01T15:35:00.674Z'
+}
+{
+  message: 'Mensaje error',
+  level: 'error',
+  label: 'Este es un label de error',
+  timestamp: '2023-04-01T15:35:00.680Z'
+}

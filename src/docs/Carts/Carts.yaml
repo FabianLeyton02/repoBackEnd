@@ -1,0 +1,12 @@
+paths:
+  /api/carts/:
+    get:
+      summary: Obtener información de los carritos
+      tags:
+        - Carts
+      responses:
+        "200":
+          Carga Exitosa
+        "500":
+          Error en servidor
+      

@@ -17,9 +17,26 @@ import customError from "./utils/customError.js";
 import { validate as uuidValidate } from "uuid";
 import logger from "./utils/logger.js";
 import loggerMiddleware from "./middleware/logger.middleware.js";
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUiExpress from "swagger-ui-express";
+import __dirname from "./utils/index.js";
 
 export function setApp() {
   const app = express();
+
+  const swaggerOptions = {
+    definition: {
+      openapi: "3.0.1",
+      info: {
+        title: "Documentación de las APIs",
+        description: "Descripción de las APIs",
+      },
+    },
+    apis: ["./docs/Products/Products.yaml", "./docs/Carts/Carts.yaml"],
+  };
+  const spec = swaggerJSDoc(swaggerOptions);
+  app.use("/apidocs", swaggerUiExpress.serve, swaggerUiExpress.setup(spec));
+  console.log(spec);
   app.use(loggerMiddleware);
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
@@ -36,8 +53,6 @@ export function setApp() {
   app.use("/api/jwt", JWTRouter);
   app.use("/api/passport", PassportRouter);
   app.use("/api/auth", AuthRouter);
-  
-
   app.set("view engine", "handlebars");
   app.set("views", "/views");
 
