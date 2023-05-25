@@ -38,6 +38,13 @@ class UserController {
       throw new Error(error.message);
     }
   }
+
+  async deleteUser(req, res) {
+    try {
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
 }
 
 export default new UserController();

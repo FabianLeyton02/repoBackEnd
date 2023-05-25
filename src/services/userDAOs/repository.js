@@ -15,4 +15,8 @@ export class UserRepository {
     const userDTO = new UserDTO(user);
     return userDTO;
   }
+  async deleteUser(){
+    await this.dato.deleteUser();
+  }
+
 }

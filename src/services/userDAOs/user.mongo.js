@@ -12,11 +12,18 @@ class UserService {
     }
   }
 
-  async getUser(email) {
+  async getUsers() {
     try {
-      const user = await UserModel.findOne({ email });
-      if (!user) throw new Error("El usuario no existe");
-      return user;
+      const users = await UserModel.find();
+      return users;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  async deleteUser() {
+    try {
+      await UserModel.deleteMany();
     } catch (error) {
       throw new Error(error.message);
     }

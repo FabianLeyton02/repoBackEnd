@@ -5,9 +5,8 @@ import { auth } from "../middleware/auth.middleware.js";
 class UserRouter {
   constructor() {
     this.router = Router();
-    this.router.post("/", userController.createUser);
-    this.router.get("/:email", userController.getUser);
-    this.router.put("/updateUser/:email", auth, userController.updateUser);
+    this.router.get("/", userController.getUser);
+    this.router.delete("/", userController.deleteUser);
   }
 
   getRouter() {
